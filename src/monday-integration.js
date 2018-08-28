@@ -8,10 +8,11 @@ const url = `https://api.monday.com:443/v1/boards/${NEW_HIRE_BOARD_ID}/pulses.js
 console.log(url);
 
 const addNewHire = (name) => {
-  return axios.post(url, {
-    "user_id": USER_ID,
-    "pulse[name]": name
-  }, { headers: { 'Content-Type': 'multipart/form-data' } })
+  return axios.post(
+    url,
+    `user_id=100637&pulse%5Bname%5D=${name}`,
+    { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+  )
 };
 
 module.exports = {
