@@ -17,8 +17,7 @@ const start = () => {
       res.send(data);
     }, (err) => {
       console.log(err);
-      res.statusCode(500);
-      res.end();
+      res.sendStatus(500);
     })
   });
 

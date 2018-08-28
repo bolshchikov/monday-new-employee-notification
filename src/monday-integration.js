@@ -1,4 +1,3 @@
-const axios = require('axios');
 const FormData = require('form-data');
 
 const NEW_HIRE_BOARD_ID = process.env.NEW_HIRE_BOARD_ID;
@@ -11,8 +10,13 @@ const addNewHire = (name) => {
   const form = new FormData();
   form.append("user_id", USER_ID);
   form.append("pulse[name]", name);
-
-  return axios.post(url, form);
+  
+  return new Promise((resolve, reject) => {
+    form.submit(url, (err, res) => {
+      if (err) reject(err);
+      resolve(res);
+    })
+  });
 };
 
 module.exports = {
