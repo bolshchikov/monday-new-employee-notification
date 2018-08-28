@@ -7,7 +7,7 @@ const MONDAY_API_TOKEN = process.env.MONDAY_API_TOKEN;
 const url = `https://api.monday.com:443/v1/boards/${NEW_HIRE_BOARD_ID}/pulses.json?api_key=${MONDAY_API_TOKEN}`;
 
 const addNewHire = (name) => {
-  fetch(url, {
+  return fetch(url, {
     "credentials": "omit",
     "headers": { "content-type": "application/x-www-form-urlencoded" },
     "referrerPolicy": "no-referrer-when-downgrade",
