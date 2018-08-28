@@ -13,8 +13,13 @@ const start = () => {
   app.post('/add', (req, res) => {
     const { subject, body } = req.body;
     const name = extractName(subject);
-    addNewHire(name);
-    res.send(name);
+    addNewHire(name).then((data) => {
+      res.send(data);
+    }, (err) => {
+      console.log(err);
+      res.statusCode(500);
+      res.end();
+    })
   });
 
   app.get('/ping', (req, res) => res.send('pong'));
