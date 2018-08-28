@@ -11,7 +11,7 @@ const addNewHire = (name) => {
     "credentials": "omit",
     "headers": { "content-type": "application/x-www-form-urlencoded" },
     "referrerPolicy": "no-referrer-when-downgrade",
-    "body": `user_id=${USER_ID}&pulse%5Bname%5D=${name}&pulse%text20%5D=Promote`,
+    "body": `user_id=${USER_ID}&pulse%5Bname%5D=${name}`,
     "method": "POST",
     "mode": "cors"
   }).then(res => res.json());
