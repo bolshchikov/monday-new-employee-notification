@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { extractName } = require('./message-parser');
+const { addNewHire } = require('./monday-integration');
 
 const app = express();
 
@@ -9,12 +10,11 @@ const PORT = process.env.PORT || 1337;
 const start = () => {
   app.use(bodyParser.json());
 
-  app.post('/parse', (req, res) => {
+  app.post('/add', (req, res) => {
     const { subject, body } = req.body;
     const name = extractName(subject);
-    res.send({
-      name
-    });
+    addNewHire(name);
+    res.send(name);
   });
 
   app.get('/ping', (req, res) => res.send('pong'));
