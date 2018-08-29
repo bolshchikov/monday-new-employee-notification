@@ -48,7 +48,7 @@ const setTeamLead = (teamLead, pulseId) => {
 };
 
 const setJoinDate = (date, pulseId) => {
-  return setColumnValue(['date', 'date_str'], COLUMN_IDS.date, date, pulseId);
+  return setColumnValue(['date', 'date_str'], COLUMN_IDS.joined_date, date, pulseId);
 };
 
 const setWelcomeTalkStatus = (colorCode, pulseId) => {

@@ -85,7 +85,7 @@ describe('Monday integrations API', () => {
         'content-type': 'application/x-www-form-urlencoded'
       }
     })
-      .put(`/v1/boards/${NEW_HIRE_BOARD_ID}/columns/${COLUMN_IDS.date}/date.json`, `pulse_id=${pulseId}&date_str=${date}`)
+      .put(`/v1/boards/${NEW_HIRE_BOARD_ID}/columns/${COLUMN_IDS.joined_date}/date.json`, `pulse_id=${pulseId}&date_str=${date}`)
       .query({ api_key: MONDAY_API_TOKEN })
       .reply(200, {});
     await setJoinDate(date, pulseId);
