@@ -14,7 +14,9 @@ const addNewHireName = (name) => {
     body: `user_id=${USER_ID}&pulse%5Bname%5D=${name}`,
     method: 'POST',
     mode: 'cors'
-  }).then(res => res.json());
+  })
+  .then(res => res.json())
+  .then(data => data.pulse.id);
 };
 
 const setColumnValue = ([path, bodyParam], columnId, value, pulseId) => {
@@ -45,10 +47,6 @@ const setTeamLead = (teamLead, pulseId) => {
   return setTextColumnValue(COLUMN_IDS.team_lead, teamLead, pulseId);
 };
 
-const setMentor = (mentorName, pulseId) => {
-  return setTextColumnValue(COLUMN_IDS.mentor, mentorName, pulseId);
-}
-
 const setJoinDate = (date, pulseId) => {
   return setColumnValue(['date', 'date_str'], COLUMN_IDS.date, date, pulseId);
 };
@@ -64,7 +62,6 @@ module.exports = {
   addNewHireName,
   setTeam,
   setTeamLead,
-  setMentor,
   setJoinDate,
   setWelcomeTalkStatus,
   setCrashCourseParticipationStatus

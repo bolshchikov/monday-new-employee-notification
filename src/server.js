@@ -1,8 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { extractName } = require('./message-parser');
-const { addNewHire } = require('./monday-integration');
 const basicAuth = require('express-basic-auth');
+const { COLOR_CODE } = require('./monday-constants');
+const { extractName, extractBodyValues } = require('./message-parser');
+const { 
+  addNewHireName,
+  setJoinDate,
+  setTeam,
+  setTeamLead,
+  setWelcomeTalkStatus,
+  setCrashCourseParticipationStatus 
+} = require('./monday-integration');
 
 const app = express();
 
@@ -12,7 +20,7 @@ const start = () => {
   app.use(bodyParser.json());
 
   app.use('/api', basicAuth({
-    users: { 
+    users: {
       [process.env.USER_NAME]: process.env.USER_PASSWORD
     }
   }));
@@ -20,8 +28,15 @@ const start = () => {
   app.post('/api/add', (req, res) => {
     const { subject, body } = req.body;
     const name = extractName(subject);
-    addNewHire(name).then((data) => {
-      res.send(data);
+    const { joinDate, teamLeadName, teamName } = extractBodyValues(body);
+    addNewHireName(name).then(pulseId => {
+      return Promise.all([
+        setJoinDate(joinDate, pulseId),
+        setTeam(teamName, pulseId),
+        setTeamLead(teamLeadName, pulseId),
+        setWelcomeTalkStatus(COLOR_CODE.red, pulseId),
+        setCrashCourseParticipationStatus(COLOR_CODE.red, pulseId)
+      ]);
     }, (err) => {
       console.log(err);
       res.sendStatus(500);

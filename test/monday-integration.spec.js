@@ -36,8 +36,9 @@ describe('Monday integrations API', () => {
         board_meta: {},
         column_values: []
       });
-    await addNewHireName(name);
+    const id = await addNewHireName(name);
     expect(call.isDone()).to.be.true;
+    expect(id).to.equal(12345);
   });
 
   it('should set Team value', async () => {
@@ -71,23 +72,6 @@ describe('Monday integrations API', () => {
       .query({ api_key: MONDAY_API_TOKEN })
       .reply(200, {});
     await setTeamLead(teamLead, pulseId);
-    expect(call.isDone()).to.be.true;
-  });
-
-  it('should set mentor name', async () => {
-    const { setMentor } = require('../src/monday-integration');
-    const pulseId = 'pulse-id-mock';
-    const mentorName = 'mentorNameMock';
-
-    const call = nock(API_BASE_URL, {
-      reqheaders: {
-        'content-type': 'application/x-www-form-urlencoded'
-      }
-    })
-      .put(`/v1/boards/${NEW_HIRE_BOARD_ID}/columns/${COLUMN_IDS.mentor}/text.json`, `pulse_id=${pulseId}&text=${mentorName}`)
-      .query({ api_key: MONDAY_API_TOKEN })
-      .reply(200, {});
-    await setMentor(mentorName, pulseId);
     expect(call.isDone()).to.be.true;
   });
 
