@@ -20,6 +20,7 @@
   "homepage": "https://github.com/bolshchikov/new-employee-notification#readme",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "cheerio": "^1.0.0-rc.2",
     "express": "^4.16.3",
     "express-basic-auth": "^1.1.5",
     "node-fetch": "^2.2.0"
