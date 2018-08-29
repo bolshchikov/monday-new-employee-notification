@@ -18,6 +18,6 @@ describe('subject parser', () => {
 
     expect(teamName).to.equal('Promote');
     expect(teamLeadName).to.equal('Guy Kori');
-    expect(joinDate).to.equal('2018-10-02');
+    expect(joinDate).to.equal('2018-10-2');
   });
 });
