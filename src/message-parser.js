@@ -22,14 +22,10 @@ const extractBodyValues = (bodyHTMLString) => {
   const $ = cheerio.load(bodyHTMLString);
   const allImportantTags = $('b');
 
-  const teamName = $(allImportantTags[TEAM_INDEX]).text();
-  const teamLeadName = $(allImportantTags[TEAM_LEAD_INDEX]).text();
-  const joinDate = normalizeDate($(allImportantTags[JOIN_DATE_INDEX]).text());
-
   return {
-    teamName,
-    teamLeadName,
-    joinDate
+    teamName: $(allImportantTags[TEAM_INDEX]).text(),
+    teamLeadName: $(allImportantTags[TEAM_LEAD_INDEX]).text(),
+    joinDate: normalizeDate($(allImportantTags[JOIN_DATE_INDEX]).text())
   };
 }
 

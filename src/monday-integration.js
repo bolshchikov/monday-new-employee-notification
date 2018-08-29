@@ -5,30 +5,36 @@ const NEW_HIRE_BOARD_ID = process.env.NEW_HIRE_BOARD_ID;
 const USER_ID = process.env.USER_ID;
 const MONDAY_API_TOKEN = process.env.MONDAY_API_TOKEN;
 
-const addNewHireName = (name) => {
-  const url = `${API_BASE_URL}/v1/boards/${NEW_HIRE_BOARD_ID}/pulses.json?api_key=${MONDAY_API_TOKEN}`;
+const encodeBody = (body) => {
+  return Object.entries(body).map(([key, val]) => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`).join('&');
+}
 
-  return fetch(url, {
+const mondayRequest = (url, method, body) => {
+  const signedUrl = `${url}?api_key=${MONDAY_API_TOKEN}`;
+  return fetch(signedUrl, {
     credentials: 'omit',
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
-    body: `user_id=${USER_ID}&pulse%5Bname%5D=${name}`,
-    method: 'POST',
+    body: encodeBody(body),
+    method,
     mode: 'cors'
   })
   .then(res => res.json())
-  .then(data => data.pulse.id);
+}
+
+const addNewHireName = (name) => {
+  const url = `${API_BASE_URL}/v1/boards/${NEW_HIRE_BOARD_ID}/pulses.json`;
+  return mondayRequest(url, 'POST', {
+    'user_id': USER_ID,
+    'pulse[name]': name
+  }).then(data => data.pulse.id);
 };
 
 const setColumnValue = ([path, bodyParam], columnId, value, pulseId) => {
-  const url = `${API_BASE_URL}/v1/boards/${NEW_HIRE_BOARD_ID}/columns/${columnId}/${path}.json?api_key=${MONDAY_API_TOKEN}`;
-
-  return fetch(url, {
-    credentials: 'omit',
-    headers: { 'content-type': 'application/x-www-form-urlencoded' },
-    body: `pulse_id=${pulseId}&${bodyParam}=${value}`,
-    method: 'PUT',
-    mode: 'cors'
-  }).then(res => res.json());
+  const url = `${API_BASE_URL}/v1/boards/${NEW_HIRE_BOARD_ID}/columns/${columnId}/${path}.json`;
+  return mondayRequest(url, 'PUT', {
+    'pulse_id': pulseId,
+    [bodyParam]: value
+  });
 }
 
 const setTextColumnValue = (columnId, value, pulseId) => {
