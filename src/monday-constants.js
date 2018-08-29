@@ -11,7 +11,11 @@ const COLUMN_IDS = {
   location: 'location'
 };
 
-const COLOR_CODE = {};
+const COLOR_CODE = {
+  red: 2,
+  green: 1,
+  yellow: 0
+};
 
 module.exports = {
   API_BASE_URL,

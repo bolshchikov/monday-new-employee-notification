@@ -1,6 +1,5 @@
 const nock = require('nock');
 const { expect } = require('chai');
-const { addNewHire, setTeam, setTeamLead, setMentor } = require('../src/monday-integration');
 const { API_BASE_URL, COLUMN_IDS, COLOR_CODE } = require('../src/monday-constants');
 
 const NEW_HIRE_BOARD_ID = 'new-hire-board-mock';
@@ -23,6 +22,7 @@ describe('Monday integrations API', () => {
   })
 
   it('should create a pulse', async () => {
+    const { addNewHireName } = require('../src/monday-integration');
     const name = 'testName';
     const call = nock(API_BASE_URL, {
       reqheaders: {
@@ -36,11 +36,12 @@ describe('Monday integrations API', () => {
         board_meta: {},
         column_values: []
       });
-    await addNewHire(name);
+    await addNewHireName(name);
     expect(call.isDone()).to.be.true;
   });
 
   it('should set Team value', async () => {
+    const { setTeam } = require('../src/monday-integration');
     const pulseId = 'pulse-id-mock';
     const testTeam = 'teamMock';
 
@@ -57,6 +58,7 @@ describe('Monday integrations API', () => {
   });
 
   it('should set team lead name', async () => {
+    const { setTeamLead } = require('../src/monday-integration');
     const pulseId = 'pulse-id-mock';
     const teamLead = 'teamLeadMock';
 
@@ -73,6 +75,7 @@ describe('Monday integrations API', () => {
   });
 
   it('should set mentor name', async () => {
+    const { setMentor } = require('../src/monday-integration');
     const pulseId = 'pulse-id-mock';
     const mentorName = 'mentorNameMock';
 
@@ -85,6 +88,57 @@ describe('Monday integrations API', () => {
       .query({ api_key: MONDAY_API_TOKEN })
       .reply(200, {});
     await setMentor(mentorName, pulseId);
+    expect(call.isDone()).to.be.true;
+  });
+
+  it('should set the joining date', async () => {
+    const { setJoinDate } = require('../src/monday-integration');
+    const pulseId = 'pulse-id-mock';
+    const date = '2018-09-20';
+
+    const call = nock(API_BASE_URL, {
+      reqheaders: {
+        'content-type': 'application/x-www-form-urlencoded'
+      }
+    })
+      .put(`/v1/boards/${NEW_HIRE_BOARD_ID}/columns/${COLUMN_IDS.date}/date.json`, `pulse_id=${pulseId}&date_str=${date}`)
+      .query({ api_key: MONDAY_API_TOKEN })
+      .reply(200, {});
+    await setJoinDate(date, pulseId);
+    expect(call.isDone()).to.be.true;
+  });
+
+  it('should set welcome talk to No', async () => {
+    const { setWelcomeTalkStatus } = require('../src/monday-integration');
+    const pulseId = 'pulse-id-mock';
+
+    const call = nock(API_BASE_URL, {
+      reqheaders: {
+        'content-type': 'application/x-www-form-urlencoded'
+      }
+    })
+      .put(`/v1/boards/${NEW_HIRE_BOARD_ID}/columns/${COLUMN_IDS.welcome_talk}/status.json`, `pulse_id=${pulseId}&color_index=${COLOR_CODE.red}`)
+      .query({ api_key: MONDAY_API_TOKEN })
+      .reply(200, {});
+
+    await setWelcomeTalkStatus(COLOR_CODE.red, pulseId);
+    expect(call.isDone()).to.be.true;
+  });
+
+  it('should set crash course participation to No', async () => {
+    const { setCrashCourseParticipationStatus } = require('../src/monday-integration');
+    const pulseId = 'pulse-id-mock';
+
+    const call = nock(API_BASE_URL, {
+      reqheaders: {
+        'content-type': 'application/x-www-form-urlencoded'
+      }
+    })
+      .put(`/v1/boards/${NEW_HIRE_BOARD_ID}/columns/${COLUMN_IDS.crash_course}/status.json`, `pulse_id=${pulseId}&color_index=${COLOR_CODE.red}`)
+      .query({ api_key: MONDAY_API_TOKEN })
+      .reply(200, {});
+
+    await setCrashCourseParticipationStatus(COLOR_CODE.red, pulseId);
     expect(call.isDone()).to.be.true;
   });
 });
