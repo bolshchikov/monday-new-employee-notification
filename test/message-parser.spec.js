@@ -1,11 +1,12 @@
 const { expect } = require('chai');
 const messageBody = require('./fixtures/message-body');
+const messageSubject = require('./fixtures/message-subject');
 const { extractName, extractBodyValues } = require('../src/message-parser');
 
 describe('subject parser', () => {
   it('should extract name', () => {
     const testName = 'Vasya Anchlovich';
-    const testSubject = `HR Notification - New Hire ${testName} (123456)`;
+    const testSubject = messageSubject(testName);
     expect(extractName(testSubject)).to.equal(testName);
   });
 

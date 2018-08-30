@@ -1,15 +1,12 @@
 const fetch = require('node-fetch');
 const { API_BASE_URL, COLUMN_IDS } = require('./monday-constants');
 
-const NEW_HIRE_BOARD_ID = process.env.NEW_HIRE_BOARD_ID;
-const USER_ID = process.env.USER_ID;
-const MONDAY_API_TOKEN = process.env.MONDAY_API_TOKEN;
-
 const encodeBody = (body) => {
   return Object.entries(body).map(([key, val]) => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`).join('&');
 }
 
 const mondayRequest = (url, method, body) => {
+  const MONDAY_API_TOKEN = process.env.MONDAY_API_TOKEN;
   const signedUrl = `${url}?api_key=${MONDAY_API_TOKEN}`;
   return fetch(signedUrl, {
     credentials: 'omit',
@@ -22,6 +19,8 @@ const mondayRequest = (url, method, body) => {
 }
 
 const addNewHireName = (name) => {
+  const USER_ID = process.env.USER_ID;
+  const NEW_HIRE_BOARD_ID = process.env.NEW_HIRE_BOARD_ID;
   const url = `${API_BASE_URL}/v1/boards/${NEW_HIRE_BOARD_ID}/pulses.json`;
   return mondayRequest(url, 'POST', {
     'user_id': USER_ID,
@@ -30,6 +29,7 @@ const addNewHireName = (name) => {
 };
 
 const setColumnValue = ([path, bodyParam], columnId, value, pulseId) => {
+  const NEW_HIRE_BOARD_ID = process.env.NEW_HIRE_BOARD_ID;
   const url = `${API_BASE_URL}/v1/boards/${NEW_HIRE_BOARD_ID}/columns/${columnId}/${path}.json`;
   return mondayRequest(url, 'PUT', {
     'pulse_id': pulseId,

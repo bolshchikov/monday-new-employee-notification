@@ -12,11 +12,12 @@ const {
   setCrashCourseParticipationStatus
 } = require('./monday-integration');
 
-const app = express();
-
 const PORT = process.env.PORT || 1337;
 
+let app, server;
+
 const start = () => {
+  app = express();
   app.use(bodyParser.json());
 
   app.use('/api', basicAuth({
@@ -55,9 +56,12 @@ const start = () => {
 
   app.get('/ping', (req, res) => res.send('pong'));
 
-  app.listen(PORT, () => console.log(`The app is running at ${PORT}`));
+  server = app.listen(PORT, () => console.log(`The app is running at ${PORT}`));
 };
 
+const stop = () => server.close();
+
 module.exports = {
-  start
+  start,
+  stop
 };

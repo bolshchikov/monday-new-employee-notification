@@ -1,0 +1,1 @@
+module.exports = (name) => `HR Notification - New Hire ${name} (123456)`;

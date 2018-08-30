@@ -1,48 +1,20 @@
-const nock = require('nock');
 const { expect } = require('chai');
-const { API_BASE_URL, COLUMN_IDS, COLOR_CODE } = require('../src/monday-constants');
-
-const NEW_HIRE_BOARD_ID = 'new-hire-board-mock';
-const USER_ID = 'user-id-mock';
-const MONDAY_API_TOKEN = 'api-token-mock';
+const driver = require('./drivers/monday');
+const { COLOR_CODE } = require('../src/monday-constants');
 
 describe('Monday integrations API', () => {
-
-  before(() => {
-    env = process.env;
-    process.env = {
-      NEW_HIRE_BOARD_ID,
-      USER_ID,
-      MONDAY_API_TOKEN
-    };
-  });
-
-  after(() => {
-    console.log(nock.pendingMocks());
-  });
-
-  const buildRequestObject = (method, url, encodedBody) => {
-    return nock(API_BASE_URL, {
-      reqheaders: {
-        'content-type': 'application/x-www-form-urlencoded'
-      }
-    })[method.toLowerCase()](url, encodedBody)
-      .query({ api_key: MONDAY_API_TOKEN })
-  }
+  before(() => driver.registerEnvVariables());
 
   it('should create a pulse', async () => {
     const { addNewHireName } = require('../src/monday-integration');
     const name = 'testName';
 
-    const call = buildRequestObject(
-      'POST',
-      `/v1/boards/${NEW_HIRE_BOARD_ID}/pulses.json`,
-      `user_id=${USER_ID}&pulse%5Bname%5D=${name}`
-    ).reply(200, {
-      pulse: { id: 12345 },
-      board_meta: {},
-      column_values: []
-    });
+    const call = driver.buildCreateNewPulseRequest(name)
+      .reply(200, {
+        pulse: { id: 12345 },
+        board_meta: {},
+        column_values: []
+      });
 
     const id = await addNewHireName(name);
     expect(call.isDone()).to.be.true;
@@ -54,11 +26,7 @@ describe('Monday integrations API', () => {
     const pulseId = 'pulse-id-mock';
     const testTeam = 'teamMock';
 
-    const call = buildRequestObject(
-      'PUT',
-      `/v1/boards/${NEW_HIRE_BOARD_ID}/columns/${COLUMN_IDS.team}/text.json`,
-      `pulse_id=${pulseId}&text=${testTeam}`
-    ).reply(200, {});
+    const call = driver.buildSetTeamColumnValueRequest(testTeam, pulseId).reply(200, {});
 
     await setTeam(testTeam, pulseId);
     expect(call.isDone()).to.be.true;
@@ -69,11 +37,7 @@ describe('Monday integrations API', () => {
     const pulseId = 'pulse-id-mock';
     const teamLead = 'teamLeadMock';
 
-    const call = buildRequestObject(
-      'PUT',
-      `/v1/boards/${NEW_HIRE_BOARD_ID}/columns/${COLUMN_IDS.team_lead}/text.json`,
-      `pulse_id=${pulseId}&text=${teamLead}`
-    ).reply(200, {});
+    const call = driver.buildSetTeamLeadColumnRequest(teamLead, pulseId).reply(200, {});
 
     await setTeamLead(teamLead, pulseId);
     expect(call.isDone()).to.be.true;
@@ -84,11 +48,7 @@ describe('Monday integrations API', () => {
     const pulseId = 'pulse-id-mock';
     const date = '2018-09-20';
 
-    const call = buildRequestObject(
-      'PUT',
-      `/v1/boards/${NEW_HIRE_BOARD_ID}/columns/${COLUMN_IDS.joined_date}/date.json`,
-      `pulse_id=${pulseId}&date_str=${date}`
-    ).reply(200, {});
+    const call = driver.buildSetJoinDateColumnRequest(date, pulseId).reply(200, {});
 
     await setJoinDate(date, pulseId);
     expect(call.isDone()).to.be.true;
@@ -98,11 +58,7 @@ describe('Monday integrations API', () => {
     const { setWelcomeTalkStatus } = require('../src/monday-integration');
     const pulseId = 'pulse-id-mock';
 
-    const call = buildRequestObject(
-      'PUT',
-      `/v1/boards/${NEW_HIRE_BOARD_ID}/columns/${COLUMN_IDS.welcome_talk}/status.json`,
-      `pulse_id=${pulseId}&color_index=${COLOR_CODE.red}`
-    ).reply(200, {});
+    const call = driver.buildSetCrashCourseColumnRequest(pulseId).reply(200, {});
 
     await setWelcomeTalkStatus(COLOR_CODE.red, pulseId);
     expect(call.isDone()).to.be.true;
@@ -112,11 +68,7 @@ describe('Monday integrations API', () => {
     const { setCrashCourseParticipationStatus } = require('../src/monday-integration');
     const pulseId = 'pulse-id-mock';
 
-    const call = buildRequestObject(
-      'PUT',
-      `/v1/boards/${NEW_HIRE_BOARD_ID}/columns/${COLUMN_IDS.crash_course}/status.json`,
-      `pulse_id=${pulseId}&color_index=${COLOR_CODE.red}`
-    ).reply(200, {});
+    const call = driver.buildSetWelcomeTalkColumnRequest(pulseId).reply(200, {});
 
     await setCrashCourseParticipationStatus(COLOR_CODE.red, pulseId);
     expect(call.isDone()).to.be.true;

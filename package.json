@@ -26,6 +26,7 @@
     "node-fetch": "^2.2.0"
   },
   "devDependencies": {
+    "base-64": "^0.1.0",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
     "nock": "^9.6.1"
