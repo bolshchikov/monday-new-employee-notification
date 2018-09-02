@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 const { API_BASE_URL, COLUMN_IDS } = require('./monday-constants');
 
 const encodeBody = (body) => {
-  return Object.entries(body).map(([key, val]) => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`).join('&');
+  return Object.keys(body).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(body[key])}`).join('&');
 }
 
 const mondayRequest = (url, method, body) => {
