@@ -1,4 +1,3 @@
-const { expect } = require('chai');
 const messageBody = require('./fixtures/message-body');
 const messageSubject = require('./fixtures/message-subject');
 const { extractName, extractBodyValues } = require('../src/message-parser');
@@ -7,7 +6,7 @@ describe('subject parser', () => {
   it('should extract name', () => {
     const testName = 'Vasya Anchlovich';
     const testSubject = messageSubject(testName);
-    expect(extractName(testSubject)).to.equal(testName);
+    expect(extractName(testSubject)).toEqual(testName);
   });
 
   it('should extract values from body', () => {
@@ -17,8 +16,8 @@ describe('subject parser', () => {
       joinDate
     } = extractBodyValues(messageBody);
 
-    expect(teamName).to.equal('Promote');
-    expect(teamLeadName).to.equal('Guy Kori');
-    expect(joinDate).to.equal('2018-10-2');
+    expect(teamName).toEqual('Promote');
+    expect(teamLeadName).toEqual('Guy Kori');
+    expect(joinDate).toEqual('2018-10-2');
   });
 });
