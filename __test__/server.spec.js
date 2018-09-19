@@ -1,4 +1,3 @@
-const { expect } = require('chai');
 const mondayDriver = require('./drivers/monday');
 const serverDriver = require('./drivers/server');
 const messageBody = require('./fixtures/message-body');
@@ -15,13 +14,13 @@ describe('Server integration tests', () => {
   it('should return pong', async () => {
     await serverDriver.startServer();
     const result = await serverDriver.makePingRequest();
-    expect(await result.text()).to.equal('pong');
+    expect(await result.text()).toEqual('pong');
   });
 
   it('should return 401 without credentials', async () => {
     await serverDriver.startServer();
     const result = await serverDriver.makeAddRequestWithoutCredentials();
-    expect(await result.status).to.equal(401);
+    expect(await result.status).toEqual(401);
   });
 
   it('should return 500 is bad answer from Monday', async () => {
@@ -30,7 +29,7 @@ describe('Server integration tests', () => {
     await serverDriver.startServer();
     mondayDriver.buildCreateNewPulseRequest(name).reply(200, {});
     const result = await serverDriver.makeAddRequest(messageSubject(name), messageBody);
-    expect(await result.status).to.equal(500)
+    expect(await result.status).toEqual(500)
   });
 
   it('should extract data and hit monday endpoints', async () => {
@@ -56,7 +55,7 @@ describe('Server integration tests', () => {
 
     const request = await serverDriver.makeAddRequest(messageSubject(name), messageBody);
     const data = await request.json();
-    expect(data).to.deep.equal({
+    expect(data).toEqual({
       name,
       teamName,
       teamLeadName,

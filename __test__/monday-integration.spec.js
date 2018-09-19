@@ -1,9 +1,8 @@
-const { expect } = require('chai');
 const driver = require('./drivers/monday');
 const { COLOR_CODE } = require('../src/monday-constants');
 
 describe('Monday integrations API', () => {
-  before(() => driver.registerEnvVariables());
+  beforeAll(() => driver.registerEnvVariables());
 
   it('should create a pulse', async () => {
     const { addNewHireName } = require('../src/monday-integration');
@@ -17,8 +16,8 @@ describe('Monday integrations API', () => {
       });
 
     const id = await addNewHireName(name);
-    expect(call.isDone()).to.be.true;
-    expect(id).to.equal(12345);
+    expect(call.isDone()).toBeTruthy();
+    expect(id).toEqual(12345);
   });
 
   it('should set Team value', async () => {
@@ -29,7 +28,7 @@ describe('Monday integrations API', () => {
     const call = driver.buildSetTeamColumnValueRequest(testTeam, pulseId).reply(200, {});
 
     await setTeam(testTeam, pulseId);
-    expect(call.isDone()).to.be.true;
+    expect(call.isDone()).toBeTruthy();
   });
 
   it('should set team lead name', async () => {
@@ -40,7 +39,7 @@ describe('Monday integrations API', () => {
     const call = driver.buildSetTeamLeadColumnRequest(teamLead, pulseId).reply(200, {});
 
     await setTeamLead(teamLead, pulseId);
-    expect(call.isDone()).to.be.true;
+    expect(call.isDone()).toBeTruthy();
   });
 
   it('should set the joining date', async () => {
@@ -51,7 +50,7 @@ describe('Monday integrations API', () => {
     const call = driver.buildSetJoinDateColumnRequest(date, pulseId).reply(200, {});
 
     await setJoinDate(date, pulseId);
-    expect(call.isDone()).to.be.true;
+    expect(call.isDone()).toBeTruthy();
   });
 
   it('should set welcome talk to No', async () => {
@@ -61,7 +60,7 @@ describe('Monday integrations API', () => {
     const call = driver.buildSetCrashCourseColumnRequest(pulseId).reply(200, {});
 
     await setWelcomeTalkStatus(COLOR_CODE.red, pulseId);
-    expect(call.isDone()).to.be.true;
+    expect(call.isDone()).toBeTruthy();
   });
 
   it('should set crash course participation to No', async () => {
@@ -71,6 +70,6 @@ describe('Monday integrations API', () => {
     const call = driver.buildSetWelcomeTalkColumnRequest(pulseId).reply(200, {});
 
     await setCrashCourseParticipationStatus(COLOR_CODE.red, pulseId);
-    expect(call.isDone()).to.be.true;
+    expect(call.isDone()).toBeTruthy();
   });
 });
